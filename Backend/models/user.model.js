@@ -1,16 +1,14 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
   empId: {
     type: String,
     required: true,
-    unique: true,
-    trim: true
+    unique: true
   },
   name: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   password: {
     type: String,
@@ -18,31 +16,24 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    trim: true,
-    required : true
+    unique: true
   },
-  mobile: {
-    type: String,
-    trim: true
+  department: {
+    type: String
   },
-  location: {
-    type: String, 
-    default: ''
+  designation: {
+    type: String
   },
   role: {
     type: String,
-    enum: ['user', 'admin'],
-    default: 'user'
-  },
-  profilePic: {
-    type: String, 
-    default: ''
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
+    enum: ['employee', 'admin'],
+    default: 'employee'
   }
+}, {
+  timestamps: true 
 });
 
+
 const User = mongoose.model('user', userSchema);
+
 export default User;
