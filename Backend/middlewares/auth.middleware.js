@@ -6,6 +6,8 @@ const authMiddleware = async (request, response, next) => {
     const token =
       request.cookies.token ||
       request.headers?.authorization?.split(" ")[1];
+   
+      
 
     if (!token) {
       return response.status(401).json({
@@ -27,7 +29,7 @@ const authMiddleware = async (request, response, next) => {
     }
 
     // 3️⃣ Attach userId to request
-    request.userId = decoded.id;
+    request.userId = decoded._id;
 
     next(); // Continue to next middleware/controller
 
