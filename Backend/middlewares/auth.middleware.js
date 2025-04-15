@@ -1,36 +1,43 @@
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
-const authMiddleware = async(request,response,next)=>{
-    try {
-        const token = request.cookies.accessToken || request?.headers?.authorization?.split(" ")[1]
-       
-        if(!token){
-            return response.status(401).json({
-                message : "Provide token"
-            })
-        }
+const authMiddleware = async (request, response, next) => {
+  try {
+    // 1️⃣ Get token from either cookies or Authorization header
+    const token =
+      request.cookies.token ||
+      request.headers?.authorization?.split(" ")[1];
 
-        const decode = await jwt.verify(token,process.env.SECRET_KEY_ACCESS_TOKEN)
-
-        if(!decode){
-            return response.status(401).json({
-                message : "unauthorized access",
-                error : true,
-                success : false
-            })
-        }
-
-        request.userId = decode.id
-
-        next();
-
-    } catch (error) {
-        return response.status(500).json({
-            message : "You need to login first",///error.message || error,
-            error : true,
-            success : false
-        })
+    if (!token) {
+      return response.status(401).json({
+        message: "Provide token",
+        error: true,
+        success: false,
+      });
     }
-}
 
-export default authMiddleware
+    // 2️⃣ Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!decoded) {
+      return response.status(401).json({
+        message: "Unauthorized access",
+        error: true,
+        success: false,
+      });
+    }
+
+    // 3️⃣ Attach userId to request
+    request.userId = decoded.id;
+
+    next(); // Continue to next middleware/controller
+
+  } catch (error) {
+    return response.status(500).json({
+      message: "You need to login first",
+      error: true,
+      success: false,
+    });
+  }
+};
+
+export default authMiddleware;
