@@ -4,7 +4,7 @@ const attendanceSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'admin',  
-    required: true
+    // required: true
   },
   empId: {
     type: String,

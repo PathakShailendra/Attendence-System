@@ -1,5 +1,8 @@
 import express from 'express';
-import { loginEmployee, logoutEmployee } from '../controllers/employee.controller.js';
+import { loginEmployee, logoutEmployee, markAttendance  } from '../controllers/employee.controller.js';
+import { verifyEmployee } from '../middlewares/employee.auth.js';
+import multer from "multer";
+const upload = multer({ storage: multer.memoryStorage() }); 
 
 const router = express.Router();
 
@@ -7,6 +10,8 @@ const router = express.Router();
 router.post('/login', loginEmployee);
 
 router.get('/logout', logoutEmployee);
+
+router.post("/mark/attendence", upload.single("photo"), markAttendance);
 
 // Add more employee routes here later
 export default router;

@@ -1,7 +1,7 @@
 // utils/uploadToCloudinary.js
 import cloudinary from "../config/cloudinary.js";
 
-export const uploadToCloudinary = async (base64Image, folderName = "attendance-photos") => {
+export const uploadToCloudinary = async (base64Image, folderName = "GoBite") => {
   try {
     const res = await cloudinary.uploader.upload(base64Image, {
       folder: folderName,

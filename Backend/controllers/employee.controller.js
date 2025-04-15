@@ -1,6 +1,13 @@
 import User from "../models/user.model.js";
+import Attendance from "../models/attendence.model.js";
+// import {uploadToCloudinary} from "../utils/uploadToCloudinary.js"; // Assuming this is your instance
+import streamifier from "streamifier";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import multer from "multer";
+import cloudinary from "../config/cloudinary.js";
+
+
 
 export const loginEmployee = async (req, res) => {
   try {
@@ -8,7 +15,9 @@ export const loginEmployee = async (req, res) => {
 
     // 🔎 Check if both fields are present
     if (!empId || !password) {
-      return res.status(400).json({ message: "Please enter both empId and password" });
+      return res
+        .status(400)
+        .json({ message: "Please enter both empId and password" });
     }
 
     // 🔍 Find employee with that empId
@@ -48,27 +57,80 @@ export const loginEmployee = async (req, res) => {
         role: employee.role,
       },
     });
-
   } catch (error) {
     res.status(500).json({ message: "Login failed", error: error.message });
   }
 };
 
-
 export const logoutEmployee = async (req, res) => {
-    try {
-      // Clear the token cookie
-      res.clearCookie("token");
-  
-      res.status(200).json({
-        message: "Logout successful",
-      });
-  
-    } catch (error) {
-      res.status(500).json({
-        message: "Logout failed",
-        error: error.message,
+  try {
+    // Clear the token cookie
+    res.clearCookie("token");
+
+    res.status(200).json({
+      message: "Logout successful",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Logout failed",
+      error: error.message,
+    });
+  }
+};
+
+
+export const markAttendance = async (req, res) => {
+  try {
+    const { empId, name, location } = req.body;
+    const file = req.file;
+
+    if (!empId || !name || !location || !file) {
+      return res.status(400).json({
+        message: "Please provide all required fields (empId, name, location, and photo)",
       });
     }
-  };
-  
+
+    const userExists = await User.findOne({ empId, role: "employee" });
+    if (!userExists) {
+      return res.status(404).json({
+        message: "Employee not found or not registered",
+      });
+    }
+
+    // 📤 Upload buffer image to Cloudinary using upload_stream
+    const streamUpload = (fileBuffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "GoBite" },
+          (error, result) => {
+            if (result) resolve(result);
+            else reject(error);
+          }
+        );
+        streamifier.createReadStream(fileBuffer).pipe(stream);
+      });
+    };
+
+    const uploadResult = await streamUpload(file.buffer);
+
+    const attendance = new Attendance({
+      empId,
+      name,
+      location,
+      photo: uploadResult.secure_url,
+    });
+
+    await attendance.save();
+
+    res.status(201).json({
+      message: "Attendance marked successfully",
+      attendance,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Something went wrong while marking attendance",
+      error: error.message,
+    });
+  }
+};
