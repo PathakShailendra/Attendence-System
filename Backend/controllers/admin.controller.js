@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import generateEmployeeId from "../utils/generateEmployeeId.js";
 import generatePassword from "../utils/generatePassword.js";
+import sendEmail from "../utils/sendEmail.js";
+import { employeeWelcomeTemplate } from "../utils/emailTemplates.js";
 
 export const registerAdmin = async (req, res) => {
   try {
@@ -154,6 +156,10 @@ export const registerEmployee = async (req, res) => {
 
     await newEmployee.save();
 
+    // ✉️ Send Email
+    const emailHTML = employeeWelcomeTemplate(name, empId, plainPassword);
+    await sendEmail(email, "Welcome to the Company! Your Login Credentials", emailHTML);
+
     res.status(201).json({
       message: "Employee registered successfully",
       credentials: {
@@ -161,6 +167,7 @@ export const registerEmployee = async (req, res) => {
         password: plainPassword,
       },
     });
+
   } catch (error) {
     res.status(500).json({
       message: "Error while registering employee",
