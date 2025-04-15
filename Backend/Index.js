@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
-import adminRoutes from './routes/user.routes.js'
+import adminRoutes from './routes/admin.routes.js'
 import cookieParser from "cookie-parser";
 
 dotenv.config();
