@@ -101,6 +101,7 @@ export const loginAdmin = async (req, res) => {
         email: admin.email,
         role: admin.role,
       },
+      success : true,
     });
   } catch (error) {
     res
