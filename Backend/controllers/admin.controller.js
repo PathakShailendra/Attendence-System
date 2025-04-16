@@ -5,6 +5,7 @@ import generateEmployeeId from "../utils/generateEmployeeId.js";
 import generatePassword from "../utils/generatePassword.js";
 import sendEmail from "../utils/sendEmail.js";
 import { employeeWelcomeTemplate } from "../utils/emailTemplates.js";
+import Attendance from '../models/attendence.model.js'
 
 export const registerAdmin = async (req, res) => {
   try {
@@ -86,11 +87,9 @@ export const loginAdmin = async (req, res) => {
 
     // Set token in cookie (optional, can be used with frontend)
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
+    
 
     res.status(200).json({
       message: "Admin logged in successfully",
@@ -168,11 +167,46 @@ export const registerEmployee = async (req, res) => {
         empId,
         password: plainPassword,
       },
+      success : true
     });
 
   } catch (error) {
     res.status(500).json({
       message: "Error while registering employee",
+      error: error.message,
+    });
+  }
+};
+
+
+// GET /api/admin/attendance/:empId
+export const getEmployeeAttendance = async (req, res) => {
+  try {
+    const { empId } = req.params;
+
+    if (!empId) {
+      return res.status(400).json({
+        message: "Employee ID is required",
+      });
+    }
+
+    const userExists = await User.findOne({ empId, role: "employee" });
+    if (!userExists) {
+      return res.status(404).json({
+        message: "Employee not found or not registered",
+      });
+    }
+
+    const attendanceRecords = await Attendance.find({ empId }).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      message: "Attendance fetched successfully",
+      count: attendanceRecords.length,
+      records: attendanceRecords,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Something went wrong while fetching attendance",
       error: error.message,
     });
   }

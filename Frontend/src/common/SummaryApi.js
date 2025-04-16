@@ -4,6 +4,9 @@ const SummaryApi = {
   },
   adminLogin : {
     url: "/api/admin/login",
+  },
+  registerEmployee : {
+    url : "/api/admin/register/employee"
   }
 };
 

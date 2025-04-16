@@ -26,25 +26,28 @@ const AdminLogin = () => {
   // Handle form submission with Axios call
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.empId || !formData.password) {
       setErrorMessage("Please fill in both fields.");
       return;
     }
-
+  
     try {
       const response = await Axios.post(SummaryApi.adminLogin.url, formData);
-
+  
       if (response?.data?.success) {
         toast.success("Login successful!");
         setErrorMessage("");
-
-        // Optional: Clear form fields
+  
+        // ✅ Save token to localStorage
+        localStorage.setItem("token", response.data.token);
+  
+        // Clear form fields
         setFormData({
           empId: "",
           password: "",
         });
-
+  
         // Navigate after 2 seconds delay
         setTimeout(() => {
           navigate("/admin/dashboard");
@@ -54,6 +57,7 @@ const AdminLogin = () => {
       AxiosToastError(error);
     }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200 px-4">

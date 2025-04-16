@@ -4,6 +4,7 @@ import AdminRegister from "../pages/AdminRegister";
 import Home from "../pages/Home";
 import AdminDashboard from "../pages/AdminDashboard";
 import AdminLogin from "../pages/AdminLogin";
+import EmployeeRegister from "../pages/EmployeeRegister";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
         {
             path : "admin/dashboard",
             element : <AdminDashboard />
+        },
+        {
+            path : "/employee/register",
+            element : <EmployeeRegister />
         }
     ],
   },

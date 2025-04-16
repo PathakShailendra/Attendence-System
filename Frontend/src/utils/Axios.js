@@ -7,7 +7,8 @@ const getToken = () => {
 };
 
 const Axios = axios.create({
-  baseURL: "http://localhost:3000", // ✅ Updated base URL
+  baseURL: "http://localhost:3000", 
+  withCredentials: true,// ✅ Updated base URL
   headers: {
     "Content-Type": "application/json",
   },
