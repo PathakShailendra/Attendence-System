@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import Axios from '../utils/Axios'; // adjust path as per your Axios instance
-import SummaryApi  from '../common/SummaryApi'; // adjust path as needed
-import AxiosToastError  from '../utils/AxiosToastError'; // for error toast
-import toast  from 'react-hot-toast';
+import Axios from '../utils/Axios'; // Your axios instance
+import SummaryApi from '../common/SummaryApi'; // API endpoints config
+import AxiosToastError from '../utils/AxiosToastError';
+import toast from 'react-hot-toast';
 
 const CheckAttendance = () => {
   const [employees, setEmployees] = useState([]);
   const [attendanceData, setAttendanceData] = useState({});
-  const [selectedAttendance, setSelectedAttendance] = useState({});
   const [filter, setFilter] = useState('all');
+  const [loadingEmpId, setLoadingEmpId] = useState(null);
 
-  // Fetch employee data on page load
+  // Fetch employees on mount
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const response = await Axios.get(SummaryApi.getAllEmployees.url);
-        console.log(response.data.employees)
         if (response?.data?.success) {
-          setEmployees(response.data.employees); // assuming backend returns employees in data.data
-        //   setAttendanceData(response.data.attendance || {}); // optional: if attendance comes with employee data
+          setEmployees(response.data.employees);
         }
       } catch (error) {
         AxiosToastError(error);
@@ -28,19 +26,44 @@ const CheckAttendance = () => {
     fetchEmployees();
   }, []);
 
-  const handleCheckAttendance = (empId) => {
-    const records = attendanceData[empId] || [];
-    setSelectedAttendance((prev) => ({
-      ...prev,
-      [empId]: prev[empId] ? null : filterAttendance(records),
-    }));
+  const handleCheckAttendance = async (empId) => {
+    // Toggle display
+    if (attendanceData[empId]) {
+      setAttendanceData((prev) => {
+        const updated = { ...prev };
+        delete updated[empId];
+        return updated;
+      });
+      return;
+    }
+
+    try {
+      setLoadingEmpId(empId);
+      const response = await Axios.get(`${SummaryApi.getAttendance.url}/${empId}`);
+
+      if (response?.data?.records) {
+        const filteredRecords = filterAttendance(response.data.records);
+        setAttendanceData((prev) => ({
+          ...prev,
+          [empId]: {
+            count: response.data.count,
+            records: filteredRecords,
+          },
+        }));
+      } else {
+        toast.error("No attendance data found.");
+      }
+    } catch (error) {
+      AxiosToastError(error);
+    } finally {
+      setLoadingEmpId(null);
+    }
   };
 
   const filterAttendance = (records) => {
     const now = new Date();
-
-    return records.filter((dateStr) => {
-      const date = new Date(dateStr);
+    return records.filter((record) => {
+      const date = new Date(record.date);
       if (filter === 'day') {
         return date.toDateString() === now.toDateString();
       } else if (filter === 'week') {
@@ -92,27 +115,43 @@ const CheckAttendance = () => {
               </div>
               <button
                 onClick={() => handleCheckAttendance(employee.empId)}
+                disabled={loadingEmpId === employee.empId}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300"
               >
-                Check
+                {loadingEmpId === employee.empId ? "Loading..." : "Check"}
               </button>
             </div>
 
-            {selectedAttendance[employee.empId] && (
+            {attendanceData[employee.empId] && (
               <div className="mt-4">
-                {selectedAttendance[employee.empId].length > 0 ? (
-                  <>
-                    <p className="font-medium text-gray-700">Attendance Dates:</p>
-                    <ul className="list-disc ml-5 mt-2 text-gray-600">
-                      {selectedAttendance[employee.empId].map((date, index) => (
-                        <li key={index}>{date}</li>
-                      ))}
-                    </ul>
-                  </>
+                {attendanceData[employee.empId].records.length > 0 ? (
+                  <div className="space-y-3">
+                    <p className="font-medium text-gray-700">
+                      Total Attendance Count - {attendanceData[employee.empId].count}
+                    </p>
+                    {attendanceData[employee.empId].records.map((record, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-4 p-3 bg-white border rounded-md shadow-sm"
+                      >
+                        <img
+                          src={record.photo}
+                          alt="Employee"
+                          className="w-12 h-12 rounded-full object-cover border"
+                        />
+                        <div>
+                          <p className="text-sm font-semibold text-gray-800">
+                            {new Date(record.date).toLocaleString()}
+                          </p>
+                          <p className="text-xs text-gray-600">
+                            {record.location}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 ) : (
-                  <p className="text-red-500 mt-2">
-                    No attendance records found for selected filter.
-                  </p>
+                  <p className="text-red-500 mt-2">No attendance found for selected filter.</p>
                 )}
               </div>
             )}

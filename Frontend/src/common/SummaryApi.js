@@ -10,7 +10,10 @@ const SummaryApi = {
   },
   getAllEmployees : {
     url : "/api/admin/get-all-employees"
-  }
+  },
+  getAttendance: {
+    url: "/api/admin/attendance", // you'll append /empId in component
+  },
 };
 
 export default SummaryApi;
