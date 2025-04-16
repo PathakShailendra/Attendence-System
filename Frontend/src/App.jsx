@@ -3,12 +3,13 @@ import TestApi from './components/TestApi'
 import { Outlet } from 'react-router-dom';
 import toast, { Toaster } from "react-hot-toast";
 import Footer from './components/Footer';
+import Header from './components/Header';
 
 
 const App = () => {
   return (
     <div>
-      <h1>Header here if needed</h1>
+      <Header />
       <Outlet />
       <Footer />
       <Toaster />
