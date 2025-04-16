@@ -14,6 +14,9 @@ const SummaryApi = {
   getAttendance: {
     url: "/api/admin/attendance", // you'll append /empId in component
   },
+  markAttendance: {
+    url: "/api/employee/mark/attendence", // ✅ Added this line
+  },
 };
 
 export default SummaryApi;
