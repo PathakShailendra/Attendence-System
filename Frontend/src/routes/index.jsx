@@ -7,6 +7,7 @@ import AdminLogin from "../pages/AdminLogin";
 import EmployeeRegister from "../pages/EmployeeRegister";
 import CheckAttendance from "../pages/CheckAttendence";
 import MarkAttendance from "../pages/MarkAttendance";
+import EmployeeLogin from "../pages/EmployeeLogin";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
         {
             path : "mark/attandence",
             element : <MarkAttendance />
+        },
+        {
+            path : "employee/login",
+            element : <EmployeeLogin />
         }
     ],
   },

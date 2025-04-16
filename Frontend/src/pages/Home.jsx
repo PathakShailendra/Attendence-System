@@ -8,7 +8,7 @@ const Home = () => {
       {/* Left Side - Image */}
       <div className="w-full md:w-1/2 h-64 md:h-auto">
         <img
-          src="https://plus.unsplash.com/premium_photo-1744576035583-e014eb83ec2a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyMXx8fGVufDB8fHx8fA%3D%3D"
+          src="https://media.istockphoto.com/id/638204032/photo/woman-scaning-finger-print-for-enter-security-system.webp?a=1&b=1&s=612x612&w=0&k=20&c=7fJg-SK9GG1Wi2AomPgomHDdHyDlC1IvFFYH6Kw6OZo="
           alt="Attendance"
           className=" object-cover w-full h-full"
         />

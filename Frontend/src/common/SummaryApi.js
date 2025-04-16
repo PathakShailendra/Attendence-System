@@ -17,6 +17,9 @@ const SummaryApi = {
   markAttendance: {
     url: "/api/employee/mark/attendence", // ✅ Added this line
   },
+  loginEmployee : {
+    url : "/api/employee/login"
+  }
 };
 
 export default SummaryApi;

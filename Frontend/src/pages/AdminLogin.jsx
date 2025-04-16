@@ -50,8 +50,8 @@ const AdminLogin = () => {
   
         // Navigate after 2 seconds delay
         setTimeout(() => {
-          navigate("/admin/dashboard");
-        }, 2000);
+          navigate("/check/attendance");
+        }, 1000);
       }
     } catch (error) {
       AxiosToastError(error);
