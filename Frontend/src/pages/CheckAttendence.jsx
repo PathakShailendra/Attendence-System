@@ -1,0 +1,126 @@
+import React, { useEffect, useState } from 'react';
+import Axios from '../utils/Axios'; // adjust path as per your Axios instance
+import SummaryApi  from '../common/SummaryApi'; // adjust path as needed
+import AxiosToastError  from '../utils/AxiosToastError'; // for error toast
+import toast  from 'react-hot-toast';
+
+const CheckAttendance = () => {
+  const [employees, setEmployees] = useState([]);
+  const [attendanceData, setAttendanceData] = useState({});
+  const [selectedAttendance, setSelectedAttendance] = useState({});
+  const [filter, setFilter] = useState('all');
+
+  // Fetch employee data on page load
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await Axios.get(SummaryApi.getAllEmployees.url);
+        console.log(response.data.employees)
+        if (response?.data?.success) {
+          setEmployees(response.data.employees); // assuming backend returns employees in data.data
+        //   setAttendanceData(response.data.attendance || {}); // optional: if attendance comes with employee data
+        }
+      } catch (error) {
+        AxiosToastError(error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
+  const handleCheckAttendance = (empId) => {
+    const records = attendanceData[empId] || [];
+    setSelectedAttendance((prev) => ({
+      ...prev,
+      [empId]: prev[empId] ? null : filterAttendance(records),
+    }));
+  };
+
+  const filterAttendance = (records) => {
+    const now = new Date();
+
+    return records.filter((dateStr) => {
+      const date = new Date(dateStr);
+      if (filter === 'day') {
+        return date.toDateString() === now.toDateString();
+      } else if (filter === 'week') {
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() - now.getDay());
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        return date >= startOfWeek && date <= endOfWeek;
+      } else if (filter === 'month') {
+        return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+      } else if (filter === 'year') {
+        return date.getFullYear() === now.getFullYear();
+      } else {
+        return true;
+      }
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-purple-200 px-4 py-8">
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-6 border border-gray-200">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-3xl font-bold text-blue-700">
+            Check Employee Attendance
+          </h2>
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="border px-3 py-2 rounded-lg text-gray-700 focus:outline-none"
+          >
+            <option value="all">All</option>
+            <option value="day">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year</option>
+          </select>
+        </div>
+
+        {employees.map((employee) => (
+          <div
+            key={employee.empId}
+            className="mb-6 p-4 border border-gray-300 rounded-lg shadow-sm bg-gray-50"
+          >
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-lg font-semibold">{employee.name}</p>
+                <p className="text-sm text-gray-600">ID: {employee.empId}</p>
+                <p className="text-sm text-gray-600">Dept: {employee.department}</p>
+              </div>
+              <button
+                onClick={() => handleCheckAttendance(employee.empId)}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+              >
+                Check
+              </button>
+            </div>
+
+            {selectedAttendance[employee.empId] && (
+              <div className="mt-4">
+                {selectedAttendance[employee.empId].length > 0 ? (
+                  <>
+                    <p className="font-medium text-gray-700">Attendance Dates:</p>
+                    <ul className="list-disc ml-5 mt-2 text-gray-600">
+                      {selectedAttendance[employee.empId].map((date, index) => (
+                        <li key={index}>{date}</li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <p className="text-red-500 mt-2">
+                    No attendance records found for selected filter.
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default CheckAttendance;

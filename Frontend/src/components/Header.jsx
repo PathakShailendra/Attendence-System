@@ -24,7 +24,7 @@ const Header = () => {
           Employee Register
         </Link>
         <Link
-          to="/attendance"
+          to="/check/attendance"
           className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-300"
         >
           Check Attendance

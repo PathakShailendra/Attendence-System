@@ -211,3 +211,25 @@ export const getEmployeeAttendance = async (req, res) => {
     });
   }
 };
+
+
+export const getAllEmployees = async (req, res) => {
+  try {
+    // req.userId comes from authMiddleware
+    const employees = await User.find({
+      role: "employee",
+    }).select("-password"); // Don't return password
+
+    res.status(200).json({
+      success: true,
+      message: "Employees fetched successfully",
+      employees,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch employees",
+      error: error.message,
+    });
+  }
+};
