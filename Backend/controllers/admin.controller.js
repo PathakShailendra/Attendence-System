@@ -51,6 +51,7 @@ export const registerAdmin = async (req, res) => {
         email: newAdmin.email,
         role: newAdmin.role,
       },
+      success : true
     });
   } catch (error) {
     res.status(500).json({
