@@ -19,6 +19,9 @@ const SummaryApi = {
   },
   loginEmployee : {
     url : "/api/employee/login"
+  },
+  changePassword : {
+    url : "/api/employee/change-password"
   }
 };
 

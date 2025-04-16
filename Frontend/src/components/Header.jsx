@@ -18,17 +18,28 @@ const Header = () => {
 
       {/* Buttons on the right */}
       <div className="flex space-x-4 ml-auto">
-        <Link
+        {/* Register Button */}
+        {/* <Link
           to="/register"
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300"
         >
           Register
-        </Link>
+        </Link> */}
+
+        {/* Login as Employee Button */}
         <Link
-          to="/login"
+          to="/employee/login"
           className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-300"
         >
-          Login
+          Login as Employee
+        </Link>
+
+        {/* Login as Admin Button */}
+        <Link
+          to="/login"
+          className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition duration-300"
+        >
+          Login as Admin
         </Link>
       </div>
     </header>

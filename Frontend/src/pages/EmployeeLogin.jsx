@@ -38,7 +38,7 @@ const EmployeeLogin = () => {
         setError('');
         toast.success('Login Successful!');
         setTimeout(() => {
-          navigate('/check/attendance');
+          navigate('/mark/attandence');
         }, 1000); // Wait for 1 second before navigating
       }
     } catch (error) {

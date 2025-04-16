@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import Webcam from "react-webcam";
 import axios from "axios";
 import Axios from "../utils/Axios";
+import { useNavigate } from "react-router-dom";
+
 import SummaryApi from "../common/SummaryApi";
 
 const MarkAttendance = () => {
@@ -10,6 +12,7 @@ const MarkAttendance = () => {
   const [location, setLocation] = useState("");
   const [imageSrc, setImageSrc] = useState(null);
   const webcamRef = useRef(null);
+  const navigate = useNavigate();
 
   // Fetch user's current location
   useEffect(() => {
@@ -174,6 +177,14 @@ const MarkAttendance = () => {
             Submit Attendance
           </button>
         </form>
+
+        <button
+          type="button"
+          onClick={() => navigate("/change-password")}
+          className="w-full bg-indigo-600 text-white mt-3 py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
+        >
+          Change Password
+        </button>
       </div>
     </div>
   );

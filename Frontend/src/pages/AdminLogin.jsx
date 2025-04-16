@@ -50,7 +50,7 @@ const AdminLogin = () => {
   
         // Navigate after 2 seconds delay
         setTimeout(() => {
-          navigate("/check/attendance");
+          navigate("/admin/dashboard");
         }, 1000);
       }
     } catch (error) {
