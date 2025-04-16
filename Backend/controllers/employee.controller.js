@@ -79,6 +79,49 @@ export const logoutEmployee = async (req, res) => {
 };
 
 
+export const changeEmployeePassword = async (req, res) => {
+  try {
+    const { empId, currentPassword, newPassword } = req.body;
+
+    if (!empId || !currentPassword || !newPassword) {
+      return res.status(400).json({
+        message: "Please provide empId, current password, and new password.",
+      });
+    }
+
+    // 🔍 Find the employee
+    const employee = await User.findOne({ empId, role: "employee" });
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found." });
+    }
+
+    // 🔐 Verify current password
+    const isMatch = await bcrypt.compare(currentPassword, employee.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Current password is incorrect." });
+    }
+
+    // 🧂 Generate salt and hash new password
+    const salt = await bcrypt.genSalt(10); // You can use 10, 12, or 15
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    // 💾 Save new password
+    employee.password = hashedPassword;
+    await employee.save();
+
+    res.status(200).json({
+      message: "Password changed successfully.",
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Something went wrong while changing password.",
+      error: error.message,
+    });
+  }
+};
+
+
 export const markAttendance = async (req, res) => {
   try {
     const { empId, name, location } = req.body;
