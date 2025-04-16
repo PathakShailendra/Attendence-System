@@ -15,5 +15,11 @@ router.post('/change-password', verifyEmployee, changeEmployeePassword)
 
 router.post("/mark/attendence", upload.single("photo"), markAttendance);
 
+// backend routes
+router.get("/test", (req, res) => {
+    res.json({ message: "Axios working correctly! 🎉" });
+  });
+  
+
 // Add more employee routes here later
 export default router;

@@ -1,8 +1,9 @@
 import React from 'react'
+import TestApi from './components/TestApi'
 
 const App = () => {
   return (
-    <div className=''>App</div>
+    <TestApi />
   )
 }
 
