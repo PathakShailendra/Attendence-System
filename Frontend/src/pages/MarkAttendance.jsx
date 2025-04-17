@@ -5,6 +5,7 @@ import Axios from "../utils/Axios";
 import { useNavigate } from "react-router-dom";
 
 import SummaryApi from "../common/SummaryApi";
+import BackButton from "../components/BackButton";
 
 const MarkAttendance = () => {
   const [empId, setEmpId] = useState("");
@@ -91,6 +92,9 @@ const MarkAttendance = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200 px-4">
+      <div className="absolute top-28 left-5">
+        <BackButton />
+      </div>
       <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md border border-gray-200">
         <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">
           Mark Attendance
