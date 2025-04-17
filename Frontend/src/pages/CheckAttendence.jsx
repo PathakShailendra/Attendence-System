@@ -3,6 +3,7 @@ import Axios from '../utils/Axios'; // Your axios instance
 import SummaryApi from '../common/SummaryApi'; // API endpoints config
 import AxiosToastError from '../utils/AxiosToastError';
 import toast from 'react-hot-toast';
+import BackButton from '../components/BackButton';
 
 const CheckAttendance = () => {
   const [employees, setEmployees] = useState([]);
@@ -84,6 +85,7 @@ const CheckAttendance = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-purple-200 px-4 py-8">
+      <BackButton />
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-6 border border-gray-200">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold text-blue-700">

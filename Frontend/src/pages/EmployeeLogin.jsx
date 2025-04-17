@@ -87,6 +87,13 @@ const EmployeeLogin = () => {
           >
             Login
           </button>
+          <button
+          type="button"
+          onClick={() => navigate("/change-password")}
+          className="w-full bg-indigo-600 text-white mt-1 py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
+        >
+          Change Password
+        </button>
         </form>
       </div>
     </div>

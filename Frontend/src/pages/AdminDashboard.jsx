@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import AxiosToastError from "../utils/AxiosToastError";
 import SummaryApi from "../common/SummaryApi";
 import Axios from "../utils/Axios";
+import Logout from "../components/Logout";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -65,6 +66,9 @@ const AdminDashboard = () => {
             >
               <FaCalendarCheck /> Check Attendance
             </button>
+          </li>
+          <li className="mt-[40vh]">
+            <Logout />
           </li>
         </ul>
       </div>

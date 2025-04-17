@@ -37,9 +37,9 @@ const EmployeeRegister = () => {
         });
 
         // Optional: redirect after 2 seconds
-        // setTimeout(() => {
-        //   navigate("/admin/dashboard/employees");
-        // }, 2000);
+        setTimeout(() => {
+          navigate("/admin/dashboard");
+        }, 1000);
       }
     } catch (error) {
       AxiosToastError(error);
